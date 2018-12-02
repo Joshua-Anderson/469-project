@@ -1,0 +1,12 @@
+[
+    {
+        "mission": "CP7",
+        "station": "hertz",
+        "time": [[10,20], [25,30]]
+    },
+    {
+        "mission": "CP12",
+        "station": "hertz",
+        "time": [[5,25]]
+    }
+]
