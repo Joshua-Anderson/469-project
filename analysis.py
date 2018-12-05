@@ -1,17 +1,15 @@
 import json
 import argparse
+import plotly
+import plotly.figure_factory as ff
+import datetime
+
 
 def main():
     parser = argparse.ArgumentParser(description='Analyze Ground Station Schedule')
-    parser.add_argument("schedule", help="Ground Station Schedule ")
+    parser.add_argument("schedule", help="Ground Station Schedule")
+    parser.add_argument("chart", help="Chart of the final Ground Station Schedule")
     args = parser.parse_args()
-
-    # Ground Station Utilization Time
-    # Ground Station Conflict Time
-    # Mission Requested Time
-    # Mission Scheduled Time
-    # Mission Time in Conflict
-    # Mission Percent Time Won Conflict
 
     with open(args.schedule) as f:
         data = json.load(f)
@@ -54,6 +52,8 @@ def main():
         print("\t\tWon Conflict {}% ({}/{})"
             .format(percent(won_conflict, conflict), won_conflict, conflict))
 
+    chart_utilization(data, args.chart)
+
 def calc_gs_stats(gs_stats,gs, ts):
     if len(ts["res"]) > 1:
         gs_stats[gs]["conflict"] += 1
@@ -71,8 +71,41 @@ def calc_mission_stats(mission_stats, ts):
     if ts["sched"] is not None:
         mission_stats[ts["sched"]]["scheduled"] += 1
 
+# Create a gantt chart of ground station utilization
+def chart_utilization(data, filename):
+    chart_data = []
+    sim_start = datetime.datetime(2000, 1, 1, 0, 0)
+
+    for gs, schedule in data.items():
+        for ts in schedule:
+            if ts["sched"] is None:
+                continue
+
+            start, finish = time_slice_to_date(sim_start, ts["time"])
+
+            point = {}
+            point["Task"] = gs
+            point["Start"] = start
+            point["Finish"] = finish
+            point["Resource"] = ts["sched"]
+            chart_data.append(point)
+
+            for m in ts["res"]:
+                m_point = {}
+                m_point["Task"] = gs + "-" + m
+                m_point["Start"] = start
+                m_point["Finish"] = finish
+                m_point["Resource"] = m
+                chart_data.append(m_point)
+
+    fig = ff.create_gantt(chart_data, index_col='Resource', group_tasks=True,
+        show_colorbar=True, title='Ground Station Schedules')
+    plotly.offline.plot(fig, filename=filename)
 
 
+# Convert raw time slice offset to an absolute time interval
+def time_slice_to_date(start, offset):
+    return str(start + datetime.timedelta(minutes = offset)), str(start + datetime.timedelta(minutes = offset + 1))
 
 def percent(a, b):
     return round((float(a)/float(b)) * 100)
