@@ -1,0 +1,214 @@
+{
+    "hertz": [
+        {
+            "time": 0,
+            "res": [],
+            "sched": null
+        },
+        {
+            "time": 1,
+            "res": [],
+            "sched": null
+        },
+        {
+            "time": 2,
+            "res": [],
+            "sched": null
+        },
+        {
+            "time": 3,
+            "res": [],
+            "sched": null
+        },
+        {
+            "time": 4,
+            "res": [],
+            "sched": null
+        },
+        {
+            "time": 5,
+            "res": [
+                "CP12"
+            ],
+            "sched": "CP12"
+        },
+        {
+            "time": 6,
+            "res": [
+                "CP12"
+            ],
+            "sched": "CP12"
+        },
+        {
+            "time": 7,
+            "res": [
+                "CP12"
+            ],
+            "sched": "CP12"
+        },
+        {
+            "time": 8,
+            "res": [
+                "CP12"
+            ],
+            "sched": "CP12"
+        },
+        {
+            "time": 9,
+            "res": [
+                "CP12"
+            ],
+            "sched": "CP12"
+        },
+        {
+            "time": 10,
+            "res": [
+                "CP7",
+                "CP12"
+            ],
+            "sched": "CP7"
+        },
+        {
+            "time": 11,
+            "res": [
+                "CP7",
+                "CP12"
+            ],
+            "sched": "CP12"
+        },
+        {
+            "time": 12,
+            "res": [
+                "CP7",
+                "CP12"
+            ],
+            "sched": "CP7"
+        },
+        {
+            "time": 13,
+            "res": [
+                "CP7",
+                "CP12"
+            ],
+            "sched": "CP12"
+        },
+        {
+            "time": 14,
+            "res": [
+                "CP7",
+                "CP12"
+            ],
+            "sched": "CP7"
+        },
+        {
+            "time": 15,
+            "res": [
+                "CP7",
+                "CP12"
+            ],
+            "sched": "CP12"
+        },
+        {
+            "time": 16,
+            "res": [
+                "CP7",
+                "CP12"
+            ],
+            "sched": "CP7"
+        },
+        {
+            "time": 17,
+            "res": [
+                "CP7",
+                "CP12"
+            ],
+            "sched": "CP12"
+        },
+        {
+            "time": 18,
+            "res": [
+                "CP7",
+                "CP12"
+            ],
+            "sched": "CP7"
+        },
+        {
+            "time": 19,
+            "res": [
+                "CP7",
+                "CP12"
+            ],
+            "sched": "CP12"
+        },
+        {
+            "time": 20,
+            "res": [
+                "CP12"
+            ],
+            "sched": "CP12"
+        },
+        {
+            "time": 21,
+            "res": [
+                "CP12"
+            ],
+            "sched": "CP12"
+        },
+        {
+            "time": 22,
+            "res": [
+                "CP12"
+            ],
+            "sched": "CP12"
+        },
+        {
+            "time": 23,
+            "res": [
+                "CP12"
+            ],
+            "sched": "CP12"
+        },
+        {
+            "time": 24,
+            "res": [
+                "CP12"
+            ],
+            "sched": "CP12"
+        },
+        {
+            "time": 25,
+            "res": [
+                "CP7"
+            ],
+            "sched": "CP7"
+        },
+        {
+            "time": 26,
+            "res": [
+                "CP7"
+            ],
+            "sched": "CP7"
+        },
+        {
+            "time": 27,
+            "res": [
+                "CP7"
+            ],
+            "sched": "CP7"
+        },
+        {
+            "time": 28,
+            "res": [
+                "CP7"
+            ],
+            "sched": "CP7"
+        },
+        {
+            "time": 29,
+            "res": [
+                "CP7"
+            ],
+            "sched": "CP7"
+        }
+    ]
+}

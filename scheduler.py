@@ -3,6 +3,7 @@
 
 import argparse
 import json
+import random
 
 def main():
     parser = argparse.ArgumentParser(description='Generate a schedule for a ground station network')
@@ -10,12 +11,12 @@ def main():
     parser.add_argument("schedule", help="generated ground station schedule")
     parser.add_argument('-g','--groundstations', help='<Required> List of ground stations in network', required=True)
     parser.add_argument('-l','--length', help='<Required> Schedule length in minutes', type=int, required=True)
+    parser.add_argument('-a', '--algorithm', help='<Required> Choose the algorithm you would like:\nFor Priority List: plist \nFor Lottery: lottery \nFor Token Algorithm: token', required=True)
+    parser.add_argument('-pl', '--prioritylist', help="the priority list of the satalites")
     args = parser.parse_args()
 
     sim_len = args.length
     gs_list = [gs for gs in args.groundstations.split(',')]
-
-    print("Starting sim with stations {} of length {} minutes".format(gs_list, sim_len))
 
     gs_sched = {}
     for gs in gs_list:
@@ -27,10 +28,35 @@ def main():
         data = json.load(f)
 
     load_reservations(gs_sched, data, sim_len)
-    resolve_conflicts(gs_sched, sim_len)
+    choose_algorithm(args, gs_sched, sim_len)
+
+    print("Starting sim with stations {} of length {} minutes".format(gs_list, sim_len))
 
     with open(args.schedule, 'w') as f:
         json.dump(gs_sched, f, indent=4)
+
+
+def choose_algorithm(args, gs_sched, sim_len):
+
+    if(args.algorithm == "plist"):
+        if(args.prioritylist == None):
+            raise Exception("No priority list specified, Enter a priority list: -pl sat1, sat2, sat3...")
+        else:
+            resolve_conflicts(gs_sched, sim_len, priority_alg, args.prioritylist.split(','))
+
+    elif(args.algorithm == "lottery"):
+        resolve_conflicts(gs_sched, sim_len, lottery_alg)
+
+    elif(args.algorithm == "token"):
+        if(args.prioritylist == None):
+            raise Exception("No priority list specified, Enter a priority list: -pl sat1, sat2, sat3...")
+        else:
+            resolve_conflicts(gs_sched, sim_len, token_alg, args.prioritylist.split(','))
+
+    else:
+        raise Exception("Unknown Algorithm {}".format(args.algorithm))
+
+
 
 def load_reservations(gs_sched, new_res, sim_len):
     # Add ground station reservations to schedule
@@ -47,7 +73,8 @@ def load_reservations(gs_sched, new_res, sim_len):
                 timeslice["res"].append(mission)
                 timeslice["time"] = t
 
-def resolve_conflicts(gs_sched, sim_len):
+def resolve_conflicts(gs_sched, sim_len, alg, pl_list=None):
+    token_map = get_token_map(pl_list)
     for gs in gs_sched:
         for t in range(sim_len):
             timeslice = gs_sched[gs][t]
@@ -55,12 +82,64 @@ def resolve_conflicts(gs_sched, sim_len):
             # If there is no conflict, just schedule the ground station
             if len(timeslice["res"]) == 0:
                 timeslice["sched"] = None
-                continue
-            if len(timeslice["res"]) == 1:
+            elif len(timeslice["res"]) == 1:
                 timeslice["sched"] = timeslice["res"][0]
-                continue
+            else:
+                timeslice["sched"] = alg(timeslice["res"], pl_list, token_map)
 
-            timeslice["sched"] = "TODO"
+def priority_alg(sats, pl_list, token_map):
+
+    min = pl_list.index(sats[0])
+    res = sats[0]
+
+    for sat in sats:
+        priority = pl_list.index(sat)
+        if(priority < min):
+            min = priority
+            res = sat
+
+    return res
+
+
+def lottery_alg(sats, pl_list, token_map):
+
+    return random.choice(sats)
+
+
+def get_token_map(pl_list):
+
+    token_map = {}
+
+    if(pl_list == None):
+        return None
+    else:
+        pl_list.reverse()
+        for i in range(len(pl_list)):
+            token_map[pl_list[i]] = i
+        return token_map
+
+
+def token_alg(sats, pl_list, token_map):
+
+    max_token = -1
+    res = ""
+
+    # find sat with max token and decrement its token
+    for sat in sats:
+        if(token_map[sat] > max_token):
+            res = sat
+            max_token = token_map[sat]
+
+    if(max_token > 0):
+        token_map[res] -= 1
+
+    # increase all other sats tokens
+    for sat in token_map:
+        if(sat != res):
+            token_map[sat] += 1
+
+    return res
+
 
 if __name__ == "__main__":
     main()
