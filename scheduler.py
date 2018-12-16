@@ -153,7 +153,7 @@ def token_alg(sats, pl_list, token_map, gs_sched, t):
     # increase all other sats tokens
     for sat in token_map:
         if(sat != res):
-            token_map[sat] += 1
+            token_map[sat] += pl_list.index(sat) + 1
 
     return res
 
