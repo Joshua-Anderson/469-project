@@ -16,6 +16,7 @@ def main():
     parser.add_argument('-pl', '--prioritylist', help="the priority list of the satalites")
     args = parser.parse_args()
 
+
     sim_len = args.length
     gs_list = [gs for gs in args.groundstations.split(',')]
 
@@ -52,7 +53,7 @@ def choose_algorithm(args, gs_sched, sim_len):
         if(args.prioritylist == None):
             raise Exception("No priority list specified, Enter a priority list: -pl sat1, sat2, sat3...")
         else:
-            resolve_conflicts(gs_sched, sim_len, token_alg, args.prioritylist.split(','))
+            resolve_conflicts(gs_sched, sim_len, token_alg, args.prioritylist.split(','), True)
 
     elif(args.algorithm == "past24"):
         resolve_conflicts(gs_sched, sim_len, past_24_alg)
@@ -77,9 +78,11 @@ def load_reservations(gs_sched, new_res, sim_len):
                 timeslice["res"].append(mission)
                 timeslice["time"] = t
 
-def resolve_conflicts(gs_sched, sim_len, alg, pl_list=None):
+def resolve_conflicts(gs_sched, sim_len, alg, pl_list=None, need_token_map=False):
     in_conflict_block = False
-    token_map = get_token_map(pl_list)
+    token_map = None
+    if(need_token_map):
+        token_map = get_token_map(pl_list)
     for gs in gs_sched:
         for t in range(sim_len):
             timeslice = gs_sched[gs][t]
