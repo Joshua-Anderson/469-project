@@ -5,13 +5,14 @@ import argparse
 import json
 import random
 
+
 def main():
     parser = argparse.ArgumentParser(description='Generate a schedule for a ground station network')
     parser.add_argument("reservations", help="requested ground station reservations")
     parser.add_argument("schedule", help="generated ground station schedule")
     parser.add_argument('-g','--groundstations', help='<Required> List of ground stations in network', required=True)
     parser.add_argument('-l','--length', help='<Required> Schedule length in minutes', type=int, required=True)
-    parser.add_argument('-a', '--algorithm', help='<Required> Choose the algorithm you would like:\nFor Priority List: plist \nFor Lottery: lottery \nFor Token Algorithm: token', required=True)
+    parser.add_argument('-a', '--algorithm', help='<Required> Choose the algorithm you would like:\nFor Priority List: plist \nFor Lottery: lottery \nFor Token Algorithm: token \nFor Past 24 hrs Algorithm: past24', required=True)
     parser.add_argument('-pl', '--prioritylist', help="the priority list of the satalites")
     args = parser.parse_args()
 
@@ -53,6 +54,9 @@ def choose_algorithm(args, gs_sched, sim_len):
         else:
             resolve_conflicts(gs_sched, sim_len, token_alg, args.prioritylist.split(','))
 
+    elif(args.algorithm == "past24"):
+        resolve_conflicts(gs_sched, sim_len, past_24_alg)
+
     else:
         raise Exception("Unknown Algorithm {}".format(args.algorithm))
 
@@ -74,6 +78,7 @@ def load_reservations(gs_sched, new_res, sim_len):
                 timeslice["time"] = t
 
 def resolve_conflicts(gs_sched, sim_len, alg, pl_list=None):
+    in_conflict_block = False
     token_map = get_token_map(pl_list)
     for gs in gs_sched:
         for t in range(sim_len):
@@ -82,12 +87,19 @@ def resolve_conflicts(gs_sched, sim_len, alg, pl_list=None):
             # If there is no conflict, just schedule the ground station
             if len(timeslice["res"]) == 0:
                 timeslice["sched"] = None
+                in_conflict_block = False
             elif len(timeslice["res"]) == 1:
                 timeslice["sched"] = timeslice["res"][0]
+                in_conflict_block = False
             else:
-                timeslice["sched"] = alg(timeslice["res"], pl_list, token_map)
+                if(in_conflict_block == False):
+                    timeslice["sched"] = alg(timeslice["res"], pl_list, token_map, gs_sched[gs], t)
+                else:
+                    timeslice["sched"] = gs_sched[gs][t - 1]["sched"]
+                in_conflict_block = True
 
-def priority_alg(sats, pl_list, token_map):
+
+def priority_alg(sats, pl_list, token_map, gs_sched, t):
 
     min = pl_list.index(sats[0])
     res = sats[0]
@@ -101,7 +113,7 @@ def priority_alg(sats, pl_list, token_map):
     return res
 
 
-def lottery_alg(sats, pl_list, token_map):
+def lottery_alg(sats, pl_list, token_map, gs_sched, t):
 
     return random.choice(sats)
 
@@ -119,7 +131,7 @@ def get_token_map(pl_list):
         return token_map
 
 
-def token_alg(sats, pl_list, token_map):
+def token_alg(sats, pl_list, token_map, gs_sched, t):
 
     max_token = -1
     res = ""
@@ -139,6 +151,29 @@ def token_alg(sats, pl_list, token_map):
             token_map[sat] += 1
 
     return res
+
+
+def past_24_alg(sats, pl_list, token_map, gs_sched, t):
+
+    sat_usage = {}
+    min_sat = None
+    limit = min(t, 1440)
+
+    # initalize map
+    for sat in sats:
+        sat_usage[sat] = 0
+
+    # find sat usage from past 24 hours
+    for i in range(1, limit):
+        last_sat = gs_sched[t - i]["sched"]
+        if(last_sat in sat_usage):
+            sat_usage[gs_sched[t - i]["sched"]] += 1
+
+    # return min sat usage
+    min_sat = min(sat_usage.items(), key=lambda x: x[1])
+
+    return min_sat[0]
+
 
 
 if __name__ == "__main__":

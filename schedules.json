@@ -74,7 +74,7 @@
                 "CP7",
                 "CP12"
             ],
-            "sched": "CP12"
+            "sched": "CP7"
         },
         {
             "time": 12,
@@ -90,7 +90,7 @@
                 "CP7",
                 "CP12"
             ],
-            "sched": "CP12"
+            "sched": "CP7"
         },
         {
             "time": 14,
@@ -106,7 +106,7 @@
                 "CP7",
                 "CP12"
             ],
-            "sched": "CP12"
+            "sched": "CP7"
         },
         {
             "time": 16,
@@ -122,7 +122,7 @@
                 "CP7",
                 "CP12"
             ],
-            "sched": "CP12"
+            "sched": "CP7"
         },
         {
             "time": 18,
@@ -138,7 +138,7 @@
                 "CP7",
                 "CP12"
             ],
-            "sched": "CP12"
+            "sched": "CP7"
         },
         {
             "time": 20,
