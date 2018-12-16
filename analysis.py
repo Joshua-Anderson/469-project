@@ -90,6 +90,14 @@ def chart_utilization(data, filename):
             point["Resource"] = ts["sched"]
             chart_data.append(point)
 
+            if len(ts["res"]) > 1:
+                c_point = {}
+                c_point["Task"] = gs + "-conflict"
+                c_point["Start"] = start
+                c_point["Finish"] = finish
+                c_point["Resource"] = "conflict"
+                chart_data.append(c_point)
+
             for m in ts["res"]:
                 m_point = {}
                 m_point["Task"] = gs + "-" + m
