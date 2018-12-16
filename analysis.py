@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import json
 import argparse
 import plotly
@@ -71,41 +73,61 @@ def calc_mission_stats(mission_stats, ts):
     if ts["sched"] is not None:
         mission_stats[ts["sched"]]["scheduled"] += 1
 
+def merge_time_slice(datapoints, prev, start, finish, task, resource):
+    # If the new time slice is a continuation of the previous one, add on to the previous one.
+    if prev is not None and \
+       prev["Resource"] == resource and \
+       prev["Finish"] == start:
+        prev["Finish"] = finish
+        return prev
+
+    # Otherwise, add the old point to the list and start a new datapoint
+    if prev is not None:
+        datapoints.append(prev)
+
+    point = {}
+    point["Start"] = start
+    point["Finish"] = finish
+    point["Resource"] = resource
+    point["Task"] = task
+    return point
+
+
+
 # Create a gantt chart of ground station utilization
 def chart_utilization(data, filename):
     chart_data = []
     sim_start = datetime.datetime(2000, 1, 1, 0, 0)
 
     for gs, schedule in data.items():
+        last_point = None
+        last_c_point = None
+        last_m_points = {}
+
+        # Add time slice to chart. Combine common data points (same mission and adjacent) to save memory
         for ts in schedule:
             if ts["sched"] is None:
                 continue
 
             start, finish = time_slice_to_date(sim_start, ts["time"])
 
-            point = {}
-            point["Task"] = gs
-            point["Start"] = start
-            point["Finish"] = finish
-            point["Resource"] = ts["sched"]
-            chart_data.append(point)
+            last_point = merge_time_slice(chart_data, last_point, start, finish, gs, ts["sched"])
 
             if len(ts["res"]) > 1:
-                c_point = {}
-                c_point["Task"] = gs + "-conflict"
-                c_point["Start"] = start
-                c_point["Finish"] = finish
-                c_point["Resource"] = "conflict"
-                chart_data.append(c_point)
+                last_c_point = merge_time_slice(chart_data, last_c_point, start, finish, gs + "-conflict", "conflict")
 
             for m in ts["res"]:
-                m_point = {}
-                m_point["Task"] = gs + "-" + m
-                m_point["Start"] = start
-                m_point["Finish"] = finish
-                m_point["Resource"] = m
-                chart_data.append(m_point)
+                last_m_points[m] = merge_time_slice(chart_data, last_m_points.get(m, None), start, finish, gs + "-" + m, m)
 
+        # If there is a reservation in progress at the end of the time, end it
+        if last_point is not None:
+            chart_data.append(last_point)
+        if last_c_point is not None:
+            chart_data.append(last_c_point)
+        for m_point in last_m_points:
+            chart_data.append(last_m_points[m_point])
+
+    print("Charting {} datapoints...".format(len(chart_data)))
     fig = ff.create_gantt(chart_data, index_col='Resource', group_tasks=True,
         show_colorbar=True, title='Ground Station Schedules')
     plotly.offline.plot(fig, filename=filename)
@@ -116,6 +138,8 @@ def time_slice_to_date(start, offset):
     return str(start + datetime.timedelta(minutes = offset)), str(start + datetime.timedelta(minutes = offset + 1))
 
 def percent(a, b):
+    if b == 0:
+        return 100
     return round((float(a)/float(b)) * 100)
 
 if __name__ == "__main__":

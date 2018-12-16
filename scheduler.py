@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 # The scheduler takes a list of requested passes as an input, resolves conflicts, and geneates
 # a schedule for the ground stations
 
