@@ -26,12 +26,12 @@ The `scheduler.py` file generates a master schedule for all the satellites at ea
 
 Parameters:
 
-    - Ground Stations: A list of ground stations that a given school has.
-    - Length: How many minutes long to generate a schedule for.
-    - Algorithm: The algorithm that is going to be used to resolve conflicts.
-    - Priority List: (optional) The priority list of satellites, required for some algorithms.
-    - Reservations: The reservation file to be used to make a schedule.
-    - Schedules: The resulting json file that contains the master schedule.
+  - Ground Stations: A list of ground stations that a given school has.
+  - Length: How many minutes long to generate a schedule for.
+  - Algorithm: The algorithm that is going to be used to resolve conflicts.
+  - Priority List: (optional) The priority list of satellites, required for some algorithms.
+  - Reservations: The reservation file to be used to make a schedule.
+  - Schedules: The resulting json file that contains the master schedule.
 
 Example Run: `python3 scheduler.py -g hertz -l 30 -a plist -pl CP7,CP12 testreservations.json schedules.json`
 
@@ -42,7 +42,7 @@ The `analysis.py` file is used to create an html file that has a graph containin
 
 Parameters:
 
-    - Schedule: The json file that contains the master schedule generated from scheduler.py
-    - Chart: The name of the chart file that will be generated.
+  - Schedule: The json file that contains the master schedule generated from scheduler.py
+  - Chart: The name of the chart file that will be generated.
 
 Example Run: `python3 analysis.py scheduler.json chart.html`
