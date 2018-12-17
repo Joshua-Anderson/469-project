@@ -13,6 +13,7 @@ There are three python programs we used to create a workflow that simulated grou
 The `reservation_generation.py` file generates a json file that shows when each satellite would like to be scheduled at a given ground station, without respect to conflicts. This is approximated by two back to back passes, then a twelve hour delay to the next set of back to back passes.
 
 Parameters:
+
   - Missions: Satellites to generate a schedule for, followed by the offset to their first pass. `CP7:50,CP12:90` includes two satellite in the reservations, one which is offset 50 minutes and one which is offset 90 minutes.
   - Ground Stations: The Ground Stations used to operate these missions and their offset from 0. `hertz:0,purdue:180` includes two stations, one of which is offset 180 minutes.
   - Length: Amount of time in minutes to run simulation for.
@@ -24,6 +25,7 @@ Example Run: `python3 reservation_generator.py -m CP7:50,CP12:90 -g hertz:0,purd
 The `scheduler.py` file generates a master schedule for all the satellites at each ground station taking into account conflicts. The master schedule is generated in the form of a json file. Each school will have its own master schedule.
 
 Parameters:
+
     - Ground Stations: A list of ground stations that a given school has.
     - Length: How many minutes long to generate a schedule for.
     - Algorithm: The algorithm that is going to be used to resolve conflicts.
@@ -39,6 +41,7 @@ Example Run: `python3 scheduler.py -g hertz -l 30 -a plist -pl CP7,CP12 testrese
 The `analysis.py` file is used to create an html file that has a graph containing statistics on how much each satellite is used at a given ground station and how conflicts are settled.
 
 Parameters:
+
     - Schedule: The json file that contains the master schedule generated from scheduler.py
     - Chart: The name of the chart file that will be generated.
 
