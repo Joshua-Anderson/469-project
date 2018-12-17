@@ -1,0 +1,35 @@
+Missions:
+	 CP7 - 50
+	 CP9 - 65
+	 CP10 - 80
+	 CP11 - 110
+	 CP12 - 200
+Ground Stations:
+	 marconi - 0
+Starting sim with stations ['marconi'] of length 20160 minutes
+Groundstation Analysis:
+	marconi:
+		Utilized 14% (2777/20160)
+		Conflict 2% (306/20160)
+Mission Analysis:
+	CP7:
+		Scheduled 80% (505/633)
+		Conflict 20% (128/633)
+		Won Conflict 0% (0/128)
+	CP9:
+		Scheduled 95% (577/608)
+		Conflict 7% (41/608)
+		Won Conflict 24% (10/41)
+	CP10:
+		Scheduled 94% (586/623)
+		Conflict 15% (96/623)
+		Won Conflict 61% (59/96)
+	CP11:
+		Scheduled 83% (519/627)
+		Conflict 33% (208/627)
+		Won Conflict 48% (100/208)
+	CP12:
+		Scheduled 95% (590/622)
+		Conflict 24% (149/622)
+		Won Conflict 79% (117/149)
+Charting 535 datapoints...

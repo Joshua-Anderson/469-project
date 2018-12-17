@@ -13,8 +13,12 @@ def main():
     parser.add_argument("chart", help="Chart of the final Ground Station Schedule")
     args = parser.parse_args()
 
-    with open(args.schedule) as f:
-        data = json.load(f)
+    data = {}
+
+    for s in args.schedule.split(','):
+        with open(s) as f:
+            tmp = json.load(f)
+            data = {**data, **tmp}
 
     gs_stats = {}
     mission_stats = {}
