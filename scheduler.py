@@ -2,10 +2,10 @@
 
 # The scheduler takes a list of requested passes as an input, resolves conflicts, and geneates
 # a schedule for the ground stations
-
 import argparse
 import json
 import random
+import sys
 
 
 def main():
@@ -88,7 +88,6 @@ def resolve_conflicts(gs_sched, sim_len, alg, pl_list=None, need_token_map=False
     for gs in gs_sched:
         for t in range(sim_len):
             timeslice = gs_sched[gs][t]
-
             # If there is no conflict, just schedule the ground station
             if len(timeslice["res"]) == 0:
                 timeslice["sched"] = None
@@ -97,7 +96,7 @@ def resolve_conflicts(gs_sched, sim_len, alg, pl_list=None, need_token_map=False
                 timeslice["sched"] = timeslice["res"][0]
                 in_conflict_block = False
             else:
-                if(in_conflict_block == False):
+                if(in_conflict_block == False and t > 0 and gs_sched[gs][t - 1]["sched"] in gs_sched[gs][t]["res"]):
                     timeslice["sched"] = alg(timeslice["res"], pl_list, token_map, gs_sched[gs], t)
                 else:
                     timeslice["sched"] = gs_sched[gs][t - 1]["sched"]
