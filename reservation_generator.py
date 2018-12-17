@@ -50,7 +50,7 @@ def main():
             while t < sim_len:
                 pass_stop = t + pass_length + randint(0, pass_length/2)
                 if pass_stop > sim_len:
-                    passes.append(t, sim_len)
+                    passes.append([t, sim_len])
                     break
                 passes.append([t, pass_stop])
 
