@@ -1,0 +1,67 @@
+Missions:
+	 CP7 - 50
+	 ADE - 53
+	 CP9 - 65
+	 TST01 - 72
+	 CP10 - 80
+	 CP11 - 110
+	 TST02 - 200
+Ground Stations:
+	 marconi - 0
+	 friis - 0
+	 kcc - 300
+	 purdue - 50
+	 testgs1 - 150
+	 testgs2 - 300
+Starting sim with stations ['marconi', 'friis', 'kcc'] of length 20160 minutes
+Starting sim with stations ['purdue'] of length 20160 minutes
+Starting sim with stations ['testgs1', 'testgs2'] of length 20160 minutes
+Groundstation Analysis:
+	marconi:
+		Utilized 17% (3345/20160)
+		Conflict 4% (844/20160)
+	friis:
+		Utilized 17% (3485/20160)
+		Conflict 4% (759/20160)
+	kcc:
+		Utilized 17% (3494/20160)
+		Conflict 4% (739/20160)
+	purdue:
+		Utilized 16% (3239/20160)
+		Conflict 4% (873/20160)
+	testgs1:
+		Utilized 17% (3360/20160)
+		Conflict 4% (817/20160)
+	testgs2:
+		Utilized 17% (3375/20160)
+		Conflict 4% (757/20160)
+Mission Analysis:
+	CP7:
+		Scheduled 71% (2684/3756)
+		Conflict 46% (1714/3756)
+		Won Conflict 37% (642/1714)
+	ADE:
+		Scheduled 72% (2727/3773)
+		Conflict 43% (1622/3773)
+		Won Conflict 36% (576/1622)
+	CP9:
+		Scheduled 78% (2911/3747)
+		Conflict 46% (1732/3747)
+		Won Conflict 52% (896/1732)
+	TST01:
+		Scheduled 62% (2309/3734)
+		Conflict 50% (1852/3734)
+		Won Conflict 23% (427/1852)
+	CP10:
+		Scheduled 84% (3157/3745)
+		Conflict 39% (1470/3745)
+		Won Conflict 60% (882/1470)
+	CP11:
+		Scheduled 87% (3235/3717)
+		Conflict 39% (1437/3717)
+		Won Conflict 66% (955/1437)
+	TST02:
+		Scheduled 88% (3275/3702)
+		Conflict 16% (601/3702)
+		Won Conflict 29% (174/601)
+Charting 4592 datapoints...
